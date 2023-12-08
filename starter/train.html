@@ -18,7 +18,7 @@
             /* Define a method that takes an input CAPTCHA and performs a set of image operations to remove noise. */
             preprocess: function(img) {
                 // Each pixel lighter than the grayscale threshold of 220 is turned white and everything darker is turned black.
-                img.binarize(220);
+                img.binarize(170);
                 
                 // Output the work-in-progress image to an element with a specific ID so we can see the effect of our image operations.
                 img.debugImage("debugPreprocessed");
@@ -32,15 +32,15 @@
                 img.debugImage("debugPreprocessed");
             },
             /* The set of characters that could potentially be in this CAPTCHA system. */
-            character_set: "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789",
+            character_set: "0123456789",
             /* The minimum number of pixels required to call a grouping of similar pixels a blob. Use this to filter out small specks before segmentation. */
-            blob_min_pixels: 50,
+            blob_min_pixels: 20,
             /* The maximum number of pixels required to call a grouping of similar pixels a blob. */
-            blob_max_pixels: 400,
+            blob_max_pixels: 80,
             /* The width of the extracted blobs. All patterns are normalized to this width. */
-            pattern_width: 25,
+            pattern_width: 30,
             /* The height of the extracted blobs. All patterns are normalized to this height. */
-            pattern_height: 25,
+            pattern_height: 45,
             /* Enable advanced logging in the browser's console. */
             allow_console_log: true,
             /* Compare the differences between colors using algorithms based on how the human eye perceives color (instead of just an RGB comparison). */
@@ -54,9 +54,13 @@
         // Note that if your browser gives you a Cross Origin Request error in the console log it's because you're attempting to load an
         // image via the file:// protocol which is a security concern. You either need to set up a local server and use http:// or
         // find some way to disable that security setting during development (not recommended).
-        cbl.train("../captchas/cryptographp/FYH5.gif");
-        cbl.train("../captchas/cryptographp/CL4R.gif");
-        cbl.train("../captchas/cryptographp/KHYC.gif");    
+        // cbl.train("../captchas/cryptographp/FYH5.gif");
+        // cbl.train("../captchas/cryptographp/CL4R.gif");
+        // cbl.train("../captchas/cryptographp/KHYC.gif"); 
+        
+        for(var i=10;i<50;i++){
+        cbl.train("../captchas/cryptographp/0000"+i+".png");
+        }
         
         var saveModel = function() {
             // Download the model after training!

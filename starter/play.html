@@ -1,5 +1,6 @@
 <!doctype html>
 <html>
+
 <head>
     <title>CBL-JS Segmentation Playground</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -9,28 +10,35 @@
         * {
             font-family: sans-serif;
         }
+
         #preprocess {
             min-height: 300px;
             min-width: 400px;
         }
+
         #debugPreprocessed {
             background: #DDDDDD;
             padding: 5px;
         }
+
         #debugSegmented {
             background: #DDDDDD;
             padding: 5px;
             margin: 5px 0 0 0;
         }
+
         img {
             margin: 0 5px 0 0;
         }
+
         .main img {
             margin: 5px 0 0 0;
         }
+
         textarea {
             font-family: monospace;
         }
+
         #imageUrl {
             display: block;
             margin: 0 0 5px 0;
@@ -38,6 +46,7 @@
         }
     </style>
 </head>
+
 <body>
     <div id="debugPreprocessed"></div>
     <div id="debugSegmented"></div>
@@ -59,16 +68,16 @@
         document.getElementById('preprocess').value = savedScript;
 
         var cbl;
-        var run = function() {
+        var run = function () {
             try {
                 // Save the script
                 localStorage.setItem('cbl', JSON.stringify(document.getElementById('preprocess').value));
 
                 document.getElementById('debugPreprocessed').innerHTML = "<div>Original</div>";
                 document.getElementById('debugSegmented').innerHTML = "<div>Segmented</div>";
-                document.getElementById('errors').innerHTML = "" ;
+                document.getElementById('errors').innerHTML = "";
                 cbl = new CBL({
-                    preprocess: function(img) {
+                    preprocess: function (img) {
                         try {
                             var commands = document.getElementById('preprocess').value.split('img.');
                             for (var i = 0; i < commands.length; i++) {
@@ -96,14 +105,22 @@
                             document.getElementById('errors').innerHTML = ex;
                         }
                     },
-                    blob_debug: "debugSegmented",
+                    /* The set of characters that could potentially be in this CAPTCHA system. */
                     character_set: "0123456789",
-                    blob_min_pixels: 40,
-                    blob_max_pixels: 350,
-                    pattern_width: 24,
-                    pattern_height: 24,
-                    pattern_maintain_ratio: true,
-                    perceptive_colorspace: true
+                    /* The minimum number of pixels required to call a grouping of similar pixels a blob. Use this to filter out small specks before segmentation. */
+                    blob_min_pixels: 20,
+                    /* The maximum number of pixels required to call a grouping of similar pixels a blob. */
+                    blob_max_pixels: 80,
+                    /* The width of the extracted blobs. All patterns are normalized to this width. */
+                    pattern_width: 30,
+                    /* The height of the extracted blobs. All patterns are normalized to this height. */
+                    pattern_height: 45,
+                    /* Enable advanced logging in the browser's console. */
+                    allow_console_log: true,
+                    /* Compare the differences between colors using algorithms based on how the human eye perceives color (instead of just an RGB comparison). */
+                    perceptive_colorspace: true,
+                    /* The ID of the element to output all work-in-progress images of segmented characters from each image. */
+                    blob_debug: "debugSegmented"
                 });
                 cbl.solve("captcha");
             }
@@ -113,9 +130,10 @@
         };
 
         // Load an image
-        document.getElementById('imageUrl').addEventListener('change', function() {
+        document.getElementById('imageUrl').addEventListener('change', function () {
             document.getElementById('captcha').src = document.getElementById('imageUrl').value;
         });
     </script>
 </body>
+
 </html>
